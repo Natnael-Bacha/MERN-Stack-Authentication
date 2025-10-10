@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import './UserSignup.css'; // Using the same CSS file
+import './userAuth.css'; 
 import { useNavigate } from 'react-router';
 
 const UserSignin = () => {
@@ -12,6 +12,8 @@ const UserSignin = () => {
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [apiError, setApiError] = useState(''); 
+  const [isSubmitting, setIsSubmitting] = useState(false); // Loading state
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -20,12 +22,17 @@ const UserSignin = () => {
       [id]: value
     }));
 
-    // Clear error when user starts typing
+    // Clear field errors when user starts typing
     if (errors[id]) {
       setErrors(prev => ({
         ...prev,
         [id]: ''
       }));
+    }
+    
+    // Clear API error when user makes any change
+    if (apiError) {
+      setApiError('');
     }
   };
 
@@ -74,7 +81,6 @@ const UserSignin = () => {
     const newErrors = {};
     let isValid = true;
 
-    // Check required fields
     const requiredFields = ['license', 'password'];
     requiredFields.forEach(field => {
       if (!formData[field].trim()) {
@@ -91,6 +97,9 @@ const UserSignin = () => {
     e.preventDefault();
     console.log("Login clicked");
 
+    // Clear previous API errors
+    setApiError('');
+
     // Mark all fields as touched
     const allFields = ['license', 'password'];
     const touchedFields = {};
@@ -104,13 +113,50 @@ const UserSignin = () => {
       return;
     }
 
-     try {
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/userAuth/userSignin`, formData, {withCredentials: true})
-        navigate('/home')
-     } catch (error) {
-        
-     }
+    setIsSubmitting(true);
+
+    try {
+      console.log(formData);
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/userAuth/userSignin`, formData, { 
+        withCredentials: true 
+      });
+      
+      if (response.status === 200) {
+        console.log("Logged in");
+        navigate('/home');
+      }  
+      
+    } catch (error) {
+      console.log("Error while logging in: ", error);
+      
+      
+      if (error.response?.status === 429) {
+        setApiError(error.response.data?.message || "Too many login attempts. Please wait a few minutes before trying again.");
+      } 
+      // Handle other API errors
+      else if (error.response?.data?.message) {
+        setApiError(error.response.data.message);
+      } 
+      // Handle network errors
+      else if (error.request) {
+        setApiError("Network error. Please check your connection and try again.");
+      } 
+      // Handle other errors
+      else {
+        setApiError("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  function handleForgotPassword() {
+    navigate('/forgotPassword');
+  }
+
+  function handleToSignup() {
+    navigate('/userSignup');
+  }
 
   return (
     <div className="signup-container">
@@ -126,6 +172,20 @@ const UserSignin = () => {
           <h1 className="signup-title">Welcome Back</h1>
           <p className="signup-subtitle">Sign in to your NIGT account</p>
         </div>
+
+        {/* API Error Message */}
+        {apiError && (
+          <div className="api-error-message">
+            <div className="error-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <span>{apiError}</span>
+          </div>
+        )}
 
         <form className="signup-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -180,16 +240,27 @@ const UserSignin = () => {
               <input type="checkbox" />
               <span>Remember me</span>
             </label>
-            <a href="/forgot-password" className="forgot-password">Forgot Password?</a>
+            <div className="forgot-password" onClick={handleForgotPassword}>Forgot Password?</div>
           </div>
 
-          <button type="submit" className="signup-button">
-            Sign In
+          <button 
+            type="submit" 
+            className={`signup-button ${isSubmitting ? 'submitting' : ''}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <div className="button-spinner"></div>
+                Signing In...
+              </>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
 
         <div className="signup-footer">
-          <p>Don't have an account? <a href="/signup" className="login-link">Create Account</a></p>
+          <p>Don't have an account? <span className="login-link" onClick={handleToSignup}>Create Account</span> </p>
           <p className="company-tagline">Made in Guinea – Driving Jobs, Skills, and Industrial Growth</p>
         </div>
       </div>

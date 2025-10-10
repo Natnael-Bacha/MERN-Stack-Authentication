@@ -1,4 +1,4 @@
-/* UserSignup.css */
+
 * {
   margin: 0;
   padding: 0;
@@ -220,6 +220,7 @@ body {
   font-weight: 600;
   transition: color 0.2s ease;
   font-size: 11px;
+  cursor: pointer;
 }
 
 .login-link:hover {
@@ -406,7 +407,7 @@ body {
   animation: spin 1s linear infinite;
 }
 
-/* Add these styles to your existing UserSignup.css for the login page */
+
 
 /* Form options for remember me and forgot password */
 .form-options {
@@ -437,6 +438,7 @@ body {
   font-size: 12px;
   font-weight: 500;
   transition: color 0.2s ease;
+  cursor: pointer;
 }
 
 .forgot-password:hover {
@@ -448,6 +450,77 @@ body {
 .login-form .signup-form {
   gap: 16px;
 }
+
+/* Forgot Password & Reset Password Specific Styles */
+.message {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.message.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.message.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.resend-code {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+.resend-link {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: 4px;
+}
+
+.resend-link:hover:not(:disabled) {
+  color: #0056b3;
+}
+
+.resend-link:disabled {
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.login-link-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  margin: 0 4px;
+}
+
+.login-link-button:hover {
+  color: #0056b3;
+}
+
+.password-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
 
 /* Responsive adjustments for form options */
 @media (max-width: 480px) {
@@ -544,4 +617,52 @@ body {
 .signup-button:focus-visible {
   outline: 2px solid #E34F1A;
   outline-offset: 2px;
+}
+
+
+.api-error-message {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #c33;
+  font-size: 14px;
+}
+
+.api-error-message .error-icon {
+  display: flex;
+  align-items: center;
+}
+
+
+.signup-button.submitting {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.signup-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }

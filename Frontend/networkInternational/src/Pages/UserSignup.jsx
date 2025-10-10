@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
-import './UserSignup.css';
+import './userAuth.css';
+import { useNavigate } from 'react-router';
 
 const UserSignup = () => {
   const [formData, setFormData] = useState({
@@ -247,6 +248,10 @@ const UserSignup = () => {
       setIsSubmitting(false);
     }
   };
+  const navigate = useNavigate();
+  function handleSignup(){
+    navigate('/userSignin')
+  }
 
   return (
     <div className="signup-container">
@@ -454,7 +459,7 @@ const UserSignup = () => {
         </form>
 
         <div className="signup-footer">
-          <p>Already have an account? <a href="/login" className="login-link">Sign In</a></p>
+          <p>Already have an account? <span className="login-link" onClick={handleSignup}>Sign In</span></p>
           <p className="company-tagline">Made in Guinea – Driving Jobs, Skills, and Industrial Growth</p>
         </div>
       </div>

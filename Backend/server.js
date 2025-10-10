@@ -13,11 +13,13 @@ app.use(
         credentials: true,
     })
 )
+
+
 app.use('/userAuth', userAuthRouter);
 
 const port = process.env.PORT || 5002;
 connectDB().then(()=>{
-app.listen(5001, ()=>{
+app.listen(port, ()=>{
     console.log(`Server Started on PORT: ${port}`);
 })
 })
