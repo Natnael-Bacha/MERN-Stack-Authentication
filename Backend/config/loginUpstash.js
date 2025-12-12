@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 dotenv.config();
 const loginRateLimit = new Ratelimit({
     redis: Redis.fromEnv(),
-    limiter: Ratelimit.slidingWindow(20, "24 h")
+    limiter: Ratelimit.slidingWindow(12, "24 h")
 })
 
 

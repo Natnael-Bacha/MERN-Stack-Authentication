@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import './UserSignup.css'; 
 import { useNavigate, useParams } from 'react-router';
 
 const ResetPassword = () => {
@@ -120,10 +119,10 @@ const ResetPassword = () => {
     e.preventDefault();
     console.log("Reset password clicked");
 
-    // Clear previous API errors
+
     setApiError('');
 
-    // Mark all fields as touched
+
     const allFields = ['newPassword', 'confirmPassword'];
     const touchedFields = {};
     allFields.forEach(field => {
@@ -146,8 +145,7 @@ const ResetPassword = () => {
       
       if (response.status === 200) {
         console.log("Password reset successfully!");
-        setApiError(''); // Clear any previous errors
-        // Show success message and redirect
+        setApiError(''); 
         setTimeout(() => {
           navigate('/');
         }, 2000);
@@ -188,13 +186,6 @@ const ResetPassword = () => {
     <div className="signup-container">
       <div className="signup-card">
         <div className="signup-header">
-          <div className="company-logo">
-            <div className="logo-text">
-              <span className="logo-primary">NETWORK</span>
-              <span className="logo-secondary">INTERNATIONAL</span>
-              <span className="logo-tertiary">GENERAL TRADING</span>
-            </div>
-          </div>
           <h1 className="signup-title">Reset Password</h1>
           <p className="signup-subtitle">
             Enter and confirm your new password
@@ -308,7 +299,7 @@ const ResetPassword = () => {
               Back to Sign In
             </span>
           </p>
-          <p className="company-tagline">Made in Guinea – Driving Jobs, Skills, and Industrial Growth</p>
+          <p className="company-tagline">More Jobs. Better Skills. Stronger Industry.</p>
         </div>
       </div>
     </div>

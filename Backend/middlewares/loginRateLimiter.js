@@ -2,10 +2,10 @@ import loginRateLimit from "../config/loginUpstash.js";
 
 const loginRateLimiter = async (req, res, next) => {
   try {
-    const { license } = req.body;
-    console.log(license)
-    const licenseNumber = license;
-    const identifier = license ? `licenseNumber-${licenseNumber}` : req.ip;
+    const { email } = req.body;
+    console.log(email);
+    
+    const identifier = email ? `email-${email}` : req.ip;
     if (!identifier) {
   console.log("Missing identifier for rate limiting");
   return res.status(400).json({ message: "Invalid request data" });

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import axios from 'axios';
-import './UserSignup.css'; 
 import { useNavigate } from 'react-router';
 
 const ForgotPassword = () => {
@@ -129,13 +128,6 @@ const ForgotPassword = () => {
     <div className="signup-container">
       <div className="signup-card">
         <div className="signup-header">
-          <div className="company-logo">
-            <div className="logo-text">
-              <span className="logo-primary">NETWORK</span>
-              <span className="logo-secondary">INTERNATIONAL</span>
-              <span className="logo-tertiary">GENERAL TRADING</span>
-            </div>
-          </div>
           <h1 className="signup-title">Forgot Password</h1>
           <p className="signup-subtitle">Enter your email to receive password reset Link</p>
         </div>
@@ -176,7 +168,7 @@ const ForgotPassword = () => {
               Back to Sign In
             </button>
           </p>
-          <p className="company-tagline">Made in Guinea – Driving Jobs, Skills, and Industrial Growth</p>
+          <p className="company-tagline">More Jobs. Better Skills. Stronger Industry.</p>
         </div>
       </div>
     </div>

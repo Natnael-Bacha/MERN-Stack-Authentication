@@ -5,6 +5,9 @@ import nodemailer from "nodemailer";
 import validator from 'validator'
 import PasswordResetToken from "../models/passwordReset.js";
 import crypto from "crypto";
+import { OAuth2Client } from "google-auth-library";
+
+
 export async function handleUserSignup(req, res) {
   const {
     firstName,
@@ -34,7 +37,6 @@ export async function handleUserSignup(req, res) {
       email,
       licenseNumber,
       password: hashPassword,
-      confirmPassword,
     });
 
     await newUser.save();
@@ -47,12 +49,13 @@ export async function handleUserSignup(req, res) {
 }
 
 export async function handleUserSignin(req, res) {
-  const { license, password } = req.body;
+  const { email, password } = req.body;
 
-  const licenseNumber = license;
+
   try {
-    const user = await User.findOne({ licenseNumber });
-    console.log("User Found!");
+ 
+    const user = await User.findOne({ email });
+ 
 
     if (!user) {
       console.log("No user found to login")
@@ -90,6 +93,48 @@ export async function handleUserSignin(req, res) {
   }
 }
 
+export async function handleGoogleSignin(req, res) {
+    console.log("Google Sign in started!")
+    try {
+        const { idtoken } = req.body; // Now expecting accessToken
+        
+        if (!idtoken) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "No access token provided" 
+            });
+        }
+
+        const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+        
+        // Verify the access token
+        const ticket = await client.verifyIdToken({
+            idToken: idtoken,
+            audience: process.env.GOOGLE_CLIENT_ID
+        });
+
+        const payload = ticket.getPayload();
+        console.log("User payload received:", payload);
+
+        return res.status(200).json({ 
+            success: true,
+            message: "Signed in successfully",
+            user: {
+                name: payload.name,
+                email: payload.email,
+                picture: payload.picture
+            }
+        });
+
+    } catch (error) {
+        console.log("Google Signin error: ", error);
+        return res.status(400).json({ 
+            success: false,
+            message: "Google sign-in failed: " + error.message 
+        });
+    }
+}
+
 export async function handleForgotPassword(req, res) {
   const { email } = req.body;
   try {
@@ -125,7 +170,7 @@ export async function handleForgotPassword(req, res) {
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "rahelnaba716@gmail.com",
+        user: "www.nathnaelbb@gmail.com",
         pass: `${process.env.app_password}`,
       },
     });
@@ -199,4 +244,30 @@ export async function handleResetPassword(req, res) {
     } catch (error) {
       console.log("Error resetting password: ", error)
     }
+}
+
+export async function handleLogout(req, res) {
+
+  try {
+      res.clearCookie('token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      path: '/'
+    }
+    
+  )
+      console.log("Logged out!");
+    return res.status(200).json({ 
+      success: true,
+      message: "Logged out successfully!"
+    });
+  } catch (error) {
+        console.error('Logout error:', error);
+    return res.status(500).json({ 
+      success: false,
+      message: "Error during logout" 
+    });
+  }
+
 }
